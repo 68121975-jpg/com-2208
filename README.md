@@ -54,4 +54,8 @@ Design Thinking คือวิธีคิดแก้ปัญหาโดย�
 
 ---
 
-* [วิดิโอคลายเครียด](https://youtu.be/dQw4w9WgXcQ?si=acLanwtZo5ILFarF)
+* [วิดิโอคลายเครียด](https://youtu.be/g3jCAyPai2Y?si=_5FiHVcvRwhxnoVN)
+
+<p align="center">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLC7Nrmba3oH4ZiB9c4IKS4GbIbgPY_fDO8HwYF_Wix7-InlnXxV4cybDN&s=10" width="100" alt="ภาพประกอบ">
+</p>
