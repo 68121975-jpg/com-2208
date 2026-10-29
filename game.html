@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เกมรถ 3 เลน</title>
+<style>
+body {
+  margin: 0;
+  background: #111827;
+  color: white;
+  font-family: sans-serif;
+  text-align: center;
+}
+h2 { margin: 12px; }
+canvas {
+  width: 95%;
+  max-width: 400px;
+  background: #333;
+  border: 3px solid white;
+  border-radius: 10px;
+  touch-action: manipulation;
+}
+button {
+  font-size: 24px;
+  padding: 12px 35px;
+  margin: 8px;
+  border: 0;
+  border-radius: 10px;
+  background: #38bdf8;
+}
+</style>
+</head>
+<body>
+
+<h2>🏎️ เกมรถ 3 เลน</h2>
+<p>คะแนน: <span id="score">0</span>
+ | ความเร็ว: <span id="speed">1</span>x</p>
+
+<canvas id="game" width="360" height="600"></canvas>
+
+<div>
+  <button onclick="move(-1)">⬅️</button>
+  <button onclick="move(1)">➡️</button>
+</div>
+<p>ใช้ปุ่มลูกศรซ้าย-ขวาเพื่อหลบรถ</p>
+<button onclick="restart()">เริ่มใหม่ 🔄</button>
+
+<script>
+const c = document.getElementById("game");
+const ctx = c.getContext("2d");
+
+let lane = 1;
+let obstacles = [];
+let coins = [];
+let score = 0;
+let speed = 2;
+let alive = true;
+let frame = 0;
+
+function xLane(lane) {
+  return 60 + lane * 120;
+}
+
+function move(dir) {
+  if (!alive) return;
+  lane = Math.max(0, Math.min(2, lane + dir));
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft" || e.key === "a")
+    move(-1);
+  if (e.key === "ArrowRight" || e.key === "d")
+    move(1);
+});
+
+function restart() {
+  lane = 1;
+  obstacles = [];
+  coins = [];
+  score = 0;
+  speed = 2;
+  frame = 0;
+  alive = true;
+  requestAnimationFrame(loop);
+}
+
+function drawDot(x, y, color, size = 12) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, size, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function loop() {
+  if (!alive) {
+    ctx.fillStyle = "white";
+    ctx.font = "30px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("GAME OVER!", 180, 270);
+    ctx.font = "18px sans-serif";
+    ctx.fillText("คะแนน: " + score, 180, 310);
+    return;
+  }
+
+  frame++;
+  ctx.clearRect(0, 0, 360, 600);
+
+  // ถนน 3 เลน
+  ctx.fillStyle = "#444";
+  ctx.fillRect(15, 0, 330, 600);
+
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 3;
+  ctx.setLineDash([25, 20]);
+
+  for (let x of [120, 240]) {
+    ctx.beginPath();
+    ctx.moveTo(x, (frame * speed) % 45 - 45);
+    ctx.lineTo(x, 600);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // สร้างสิ่งกีดขวาง
+  if (frame % Math.max(18, 55 - speed * 4) === 0) {
+    obstacles.push({
+      lane: Math.floor(Math.random() * 3),
+      y: -10
+    });
+  }
+
+  // สร้างเหรียญ
+  if (frame % 70 === 0) {
+    coins.push({
+      lane: Math.floor(Math.random() * 3),
+      y: -10
+    });
+  }
+
+  // รถที่ต้องหลบ
+  obstacles.forEach(o => {
+    o.y += speed;
+    drawDot(xLane(o.lane), o.y, "#ff4545", 14);
+
+    if (o.lane === lane &&
+        Math.abs(o.y - 520) < 20) {
+      alive = false;
+    }
+  });
+
+  obstacles = obstacles.filter(o => o.y < 620);
+
+  // เหรียญ
+  coins.forEach(o => {
+    o.y += speed;
+    drawDot(xLane(o.lane), o.y, "#ffd43b", 9);
+
+    if (o.lane === lane &&
+        Math.abs(o.y - 520) < 18) {
+      o.y = 1000;
+      score += 10;
+    }
+  });
+
+  coins = coins.filter(o => o.y < 620);
+
+  // รถผู้เล่นเป็นจุดสีฟ้า
+  drawDot(xLane(lane), 520, "#38bdf8", 16);
+  drawDot(xLane(lane), 520, "white", 5);
+
+  score++;
+  if (frame % 500 === 0) speed += 0.5;
+
+  document.getElementById("score").textContent = score;
+  document.getElementById("speed").textContent =
+    (speed / 2).toFixed(1);
+
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+</body>
+</html>
