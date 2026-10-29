@@ -60,8 +60,8 @@ Design Thinking คือวิธีคิดแก้ปัญหาโดย�
 <p align="center">
   <img
     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLC7Nrmba3oH4ZiB9c4IKS4GbIbgPY_fDO8HwYF_Wix7-InlnXxV4cybDN&s=10"
-    width="100%"
-    style="max-width: 100%; height: auto;"
+    width="50%"
+    style="max-width: 50%; height: auto;"
     alt="ภาพประกอบ"
   >
 </p>
